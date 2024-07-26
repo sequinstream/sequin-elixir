@@ -1,6 +1,6 @@
 defmodule Sequin do
   @moduledoc """
-  A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin streams](https://github.com/sequinstream/sequin).
+  A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin](https://github.com/sequinstream/sequin).
 
   ## Installation
 
@@ -29,7 +29,7 @@ defmodule Sequin do
 
   ## Usage
 
-  You'll predominantly use `Sequin` to send, receive, and acknowledge [messages](https://github.com/sequinstream/sequin?tab=readme-ov-file#messages) in Sequin streams:
+  You'll predominantly use `Sequin` to send, receive, and acknowledge [messages](https://github.com/sequinstream/sequin?tab=readme-ov-file#messages) in Sequin:
 
   ```elixir
   # Define your stream and consumer
