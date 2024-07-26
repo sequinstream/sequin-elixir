@@ -2,10 +2,11 @@
 
 A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin streams](https://github.com/sequinstream/sequin).
 
+See the [docs on hex](https://hexdocs.pm/sequin_client/Sequin.html).
+
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `sequin` to your list of dependencies in `mix.exs`:
+Sequin can be installed by adding `sequin` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
