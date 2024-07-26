@@ -2,6 +2,18 @@ defmodule Sequin do
   @moduledoc """
   A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin streams](https://github.com/sequinstream/sequin).
 
+  ## Installation
+
+  Sequin can be installed by adding `sequin` to your list of dependencies in `mix.exs`:
+
+  ```elixir
+  def deps do
+    [
+      {:sequin, "~> 0.1.0"}
+    ]
+  end
+  ```
+
   ## Configuration
 
   To use Sequin in your application, you'll need to configure it in your `config.exs` file. Add the following configuration:
@@ -26,8 +38,8 @@ defmodule Sequin do
 
   # Send a message
   case Sequin.send_message(stream, "test.1", "Hello, Sequin!") do
-  {:ok, %{published: 1}} ->
-    IO.puts("Message sent successfully")
+    {:ok, %{published: 1}} ->
+      IO.puts("Message sent successfully")
 
     {:error, error} ->
       IO.puts("Error sending message: \#{Exception.message(error)}")
