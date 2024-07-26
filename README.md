@@ -1,8 +1,8 @@
 # Sequin
 
-A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin streams](https://github.com/sequinstream/sequin).
+A lightweight Elixir SDK for sending, receiving, and acknowledging messages in [Sequin](https://github.com/sequinstream/sequin).
 
-See the [docs on hex](https://hexdocs.pm/sequin_client/Sequin.html).
+See the [docs on Hex](https://hexdocs.pm/sequin_client/Sequin.html).
 
 ## Installation
 
@@ -31,7 +31,7 @@ By default, the Client is initialized using Sequin's default host and port in lo
 
 ## Usage
 
-You'll predominantly use `Sequin` to send, receive, and acknowledge [messages](https://github.com/sequinstream/sequin?tab=readme-ov-file#messages) in Sequin streams:
+You'll predominantly use `Sequin` to send, receive, and acknowledge [messages](https://github.com/sequinstream/sequin?tab=readme-ov-file#messages) in Sequin:
 
 ```elixir
 # Define your stream and consumer
@@ -63,7 +63,7 @@ end
 
 ## Testing
 
-To adequately test Sequin, we recommend creating temporary streams and consumers in addition to testing sending and receiving messages. Here's an example using ExUnit:
+To test code that uses Sequin, you can create temporary streams and consumers. Here's an example using ExUnit:
 
 ```elixir
 defmodule SequinTest do
@@ -73,34 +73,29 @@ defmodule SequinTest do
   @stream_name "test-stream-#{System.system_time(:second)}"
   @consumer_name "test-consumer-#{System.system_time(:second)}"
 
-  test "Stream and Consumer Lifecycle" do # Create a new stream
-    {:ok, %Sequin.Stream{name: stream_name}} = Sequin.create_stream(@stream_name)
+  setup do
+    {:ok, _} = Sequin.create_stream(@stream_name)
+    {:ok, _} = Sequin.create_consumer(@stream_name, @consumer_name, "test.>")
 
-    # Create a consumer
-    {:ok, %Sequin.Consumer{name: consumer_name}} = Sequin.create_consumer(@stream_name, @consumer_name, "test.>")
+    on_exit(fn ->
+      # Delete the consumer
+      {:ok, _} = Sequin.delete_consumer(@stream_name, @consumer_name)
 
+      # Delete the stream
+      {:ok, _} = Sequin.delete_stream(@stream_name)
+    end)
+
+    :ok
+  end
+
+  # Create a new stream
+  test "Stream and Consumer Lifecycle" do
     # Send a message
     assert {:ok, %{published: 1}} = Sequin.send_message(@stream_name, "test.1", "Hello, Sequin!")
-
-    # Receive and ack a message
-    with {:ok, %Sequin.Message{} = message} <- Sequin.receive_message(@stream_name, @consumer_name),
-        # do work
-        :ok <- Sequin.ack_message(@stream_name, @consumer_name, message.ack_id) do
-      IO.puts("Received and acked message: #{inspect(message)}")
-    else
-      {:error, error} ->
-        IO.puts("Error: #{Exception.message(error)}")
-    end
-
-    # Delete the consumer
-    {:ok, delete_consumer_res} = Sequin.delete_consumer(@stream_name, @consumer_name)
-
-    # Delete the stream
-    {:ok, delete_stream_res} = Sequin.delete_stream(@stream_name)
+    
+    assert YourApp.handle_messages()
   end
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/sequin>.
+Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc) and published on [HexDocs](https://hexdocs.pm). Once published, the docs can be found at <https://hexdocs.pm/sequin>.
